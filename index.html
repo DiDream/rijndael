@@ -4,7 +4,442 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/normalize.css" attr>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
-  <body></body>
+  <body>
+    <header class="mean">
+      <h1>Rijndael (AES)</h1>
+    </header>
+    <section class="form">
+      <form id="inputs-form">
+        <div class="message">
+          <h2>Mensaje</h2>
+          <div class="inputs-message">
+            <input type="text" id="m-0" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-1" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-2" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-3" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-4" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-5" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-6" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-7" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-8" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-9" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-10" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-11" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-12" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-13" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-14" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="m-15" pattern="[0-9a-fA-F]{1,2}">
+          </div>
+        </div>
+        <div class="key">
+          <h2>Clave</h2>
+          <div class="inputs-key">
+            <input type="text" id="k-0" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-1" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-2" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-3" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-4" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-5" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-6" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-7" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-8" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-9" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-10" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-11" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-12" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-13" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-14" pattern="[0-9a-fA-F]{1,2}">
+            <input type="text" id="k-15" pattern="[0-9a-fA-F]{1,2}">
+          </div>
+        </div>
+        <button type="submit" id="start"><i class="fa fa-play-circle" aria-hidden="true"></i></button>
+      </form>
+    </section>
+    <section id="rijndael">
+      <table cellpadding="10px">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Star of round</th>
+            <th>after SubBytes</th>
+            <th>after ShiftRows</th>
+            <th>after MixColumns</th>
+            <th></th>
+            <th>Round key</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rijndael-results">
+          <!--
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          tr
+              td Entradas
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+                  .matrix
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+                      .matrix-element
+              td
+              td
+              td
+                  .xor-symbol
+              td
+              td
+                  .equal-symbol
+          -->
+        </tbody>
+      </table>
+    </section>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="js/rows.js"></script>
+    <script src="js/index.js"></script>
+  </body>
 </html>

@@ -1,0 +1,130 @@
+header.mean {
+  background-color: red;
+  width: 100%;
+  height: 100px;
+  color: #fff; }
+  header.mean h1 {
+    display: inline-block;
+    margin-left: 20px; }
+
+#inputs-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 500px;
+  margin: 20px auto 0px; }
+  #inputs-form h2 {
+    margin: 0px;
+    font-size: 13px;
+    text-transform: uppercase;
+    text-align: center; }
+  #inputs-form input {
+    width: 25px;
+    border: 0px;
+    height: 25px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    float: left;
+    font-size: 18px;
+    box-sizing: border-box; }
+
+.inputs-message {
+  width: 125px;
+  height: 125px; }
+  .inputs-message input {
+    background-color: teal; }
+
+.inputs-key {
+  width: 125px;
+  height: 125px; }
+  .inputs-key input {
+    background-color: pink; }
+
+#start {
+  border: 0px;
+  background: none;
+  font-size: 30px;
+  padding: 0px;
+  line-height: 0px;
+  cursor: pointer; }
+
+#rijndael {
+  margin: 20px auto 0px;
+  width: 1000px; }
+
+table {
+  margin: 0 auto;
+  text-align: center;
+  border-collapse: collapse; }
+  table thead {
+    background-color: #E1E9F1;
+    text-transform: uppercase;
+    font-size: 13px; }
+  table tbody {
+    background-color: #EDF1F5; }
+    table tbody tr {
+      border-bottom: 5px solid #fff; }
+    table tbody tr:last-of-type {
+      border-bottom-color: transparent; }
+  table .row-name {
+    text-transform: uppercase;
+    font-size: 13px;
+    text-align: left;
+    font-weight: bold; }
+  table #inputs .start-round .matrix {
+    background-color: teal; }
+  table #inputs .round-key .matrix {
+    background-color: pink; }
+
+.matrix {
+  display: flex;
+  flex-wrap: wrap;
+  width: 120px;
+  margin: 0 auto; }
+  .matrix .matrix-element {
+    width: 30px;
+    height: 25px;
+    box-sizing: border-box;
+    border: 1px solid black; }
+
+.xor-symbol {
+  width: 26px;
+  height: 26px;
+  border: 2px solid black;
+  border-radius: 50%;
+  position: relative; }
+  .xor-symbol::before, .xor-symbol::after {
+    content: '';
+    position: absolute;
+    background-color: black; }
+  .xor-symbol::before {
+    width: 2px;
+    height: 100%;
+    left: 12px;
+    top: 0px; }
+  .xor-symbol::after {
+    width: 100%;
+    height: 2px;
+    top: 12px;
+    left: 0px; }
+
+.equal-symbol {
+  width: 26px;
+  height: 10px;
+  position: relative; }
+  .equal-symbol::before, .equal-symbol::after {
+    content: '';
+    position: absolute;
+    background-color: black; }
+  .equal-symbol::before {
+    width: 100%;
+    height: 2px;
+    left: 0px;
+    top: 0px; }
+  .equal-symbol::after {
+    width: 100%;
+    height: 2px;
+    left: 0px;
+    bottom: 0px; }
