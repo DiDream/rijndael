@@ -9,6 +9,7 @@ function xorOperation(a, b){
     }
     return result;
 }
+
 function addZeros(a){
     while(a.length<BYTE_LENGTH){
         a = '0' + a;
@@ -20,22 +21,42 @@ class Rijndael{
         this.originalMessage = m;
         this.key = k;
         this.rounds = [];
-        this.addRoungKey();
+        this.gen_message = m.slice(0); //Copiando array
+        this.gen_key = k.slice(0);
+
+
     }
     addRoungKey(){
-        var roundStart = [];
-        for(var i=0; i<this.originalMessage.length; i++){
-            var a = addZeros(this.originalMessage[i].toString(2));
-            var b = addZeros(this.key[i].toString(2));
-            roundStart.push(parseInt(xorOperation(a, b),  2) );
+        var m = this.gen_message;
+        var k = this.gen_key;
+
+        for(var i=0; i<m.length; i++){
+            var a = addZeros(m[i].toString(2));
+            var b = addZeros(k[i].toString(2));
+            this.gen_message[i] = parseInt(xorOperation(a, b),  2);
         }
-        console.log(roundStart);
+        console.log(this.originalMessage);
+        console.log(this.gen_message);
     }
-    // subByte(){
-    //     var result = ;
-    //     var caja;
-    //     for(var i=0; i<caja.length; i++){
-    //
-    //     }
-    // }
+    subByte(){
+        var m = this.gen_message;
+
+        for(var i=0; i<m.length; i++){
+            this.gen_message[i] = SBOX[m[i]];
+        }
+        console.log(m);
+        console.log(this.gen_message);
+    }
+    shiftRow(){
+        var m = this.gen_message;
+
+        for(var i=4,j=1; i<m.length; i+=4){
+            var tmp = m.splice(i,j);
+            m.splice((i+4)-tmp.length,0,...tmp);
+            j++;
+        }
+        console.log(m);
+        console.log(this.gen_message);
+
+    }
 }
