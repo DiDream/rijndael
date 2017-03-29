@@ -5,91 +5,206 @@ var MIXCOLUM_MATRIX = new Matrix(4,4,[2,3,1,1,
                                     1,2,3,1,
                                     1,1,2,3,
                                     3,1,1,2])
+var RCON = new Matrix(4,10,
+    [1,2,4,8,16,32,64,128,27,54,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0]);
+
 var M = {rows: 4, cols: 4};
 var K = {rows: 4, cols: 4};
-function xorOperation(a, b){
-    var result = '';
-    for(var i=0; i<BYTE_LENGTH; i++){
-        result += a[i] == b[i]? '0': '1';
+function xor(){
+    var result = '00000000';
+    for(var i=0; i<arguments.length; i++){
+        var op = '';
+        if ( typeof arguments[i] == 'number' ) {
+            op = arguments[i].toByte();
+
+        }
+        else if(typeof arguments[i] == 'string')
+            op = arguments[i];
+        else
+            throw 'Parametro no valido para operacion xor';
+        var tmp = '';
+        for(var j=0; j<BYTE_LENGTH; j++){
+            tmp += result[j] == op[j]? '0': '1';
+        }
+
+        result = tmp;
     }
-    return result;
+    return parseInt(result,2);
 }
 
-function addZeros(a){
-    while(a.length<BYTE_LENGTH){
-        a = '0' + a;
+Number.prototype.toByte = function(){
+    if (this.valueOf()>=256)
+        throw 'Numero mayor que 255';
+    var byte = this.valueOf().toString(2);
+    while(byte.length<BYTE_LENGTH){
+        byte = '0' + byte;
     }
-    return a;
+    return byte;
+}
+Array.prototype.rotate = function(times){
+    this.push(this.shift());
 }
 Matrix.prototype.shiftRow = function(row, times){
+    times = times || 1;
     for(var i=0; i<times; i++){
-        this._elements[row].push(this._elements[row].shift() );
+        this._elements[row].rotate(times);
 
     }
-    console.log(this._elements[row]);
 
+}
+Matrix.prototype.pushColumn = function(newColumn){
+    if (!newColumn instanceof Array && typeof newColumn != 'string')
+        throw 'Variable no válida';
+    if (newColumn.length != this.rows && this.rows != 0)
+        throw 'La nueva columna tiene longitud incorrecta';
+
+
+    for(var i=0; i<this.rows; i++){
+        this._elements[i].push(newColumn[i]);
+    }
+    this._cols++;
+}
+Matrix.prototype.setColum = function(j,col){
+    for(var i=0; i<this.rows; i++){
+        this.setElement(i,j,col[i]);
+    }
+}
+Matrix.prototype.toHex = function(){
+    var res = [];
+    for(var i=0; i<this.rows; i++){
+        for(var j=0; j<this.cols; j++){
+            res.push(this.getElement(i,j).toString(16));
+        }
+    }
+    return res;
 }
 class Rijndael{
     constructor(m, k){
         this.originalMessage = new Matrix(M.rows,M.cols,m);
         this.key = new Matrix(K.rows,K.cols,k);
         this.rounds = [];
+        this.roundKey = 0;
 
+        //Inicializacion
         this._m = new Matrix(M.rows,M.cols,m); //Copiando array
         this._k = new Matrix(M.rows,M.cols,k);
 
+        //algoritmo
 
     }
-    addRoungKey(){
+    generateKey(){
+        var k = this._k;
+        var col = k.getColumn(3);
+
+    //OBTENER PRIMERA COLUMNA
+        //RotWord
+        col.rotate(1);
+
+        //subBytes
+        for(var i=0; i<K.rows; i++){
+            col[i] = SBOX[col[i]];
+        }
+        //Rcon
+        var minusFour = k.getColumn(0);
+        var rcon = RCON.getColumn(this.roundKey++);
+        for(var i=0; i<K.rows; i++){
+            k.setElement(i,0 , xor(minusFour[i],col[i],rcon[i]) );
+        }
+
+    //OBTENER RESTO DE COLUMNAS
+        for(var i=1; i<K.cols;i++){
+            for(var j=0; j<k.rows; j++){
+
+                k.setElement(j,i, xor(
+                                    k.getElement(j,i),
+                                    k.getElement(j,i-1)
+                                    )
+                );
+            }
+        }
+        console.log(k.toHex());
+
+    }
+    addRoundKey(){
         var m = this._m;
         var k = this._k;
         for(var i=0; i<m.rows; i++){
             for(var j=0; j<m.cols; j++){
-                var a = addZeros(m.getElement(i,j).toString(2));
-                var b = addZeros(k.getElement(i,j).toString(2));
-                this._m.setElement(i,j,parseInt(xorOperation(a, b),  2));
+                var a = m.getElement(i,j);
+                var b = k.getElement(i,j);
+                this._m.setElement(i,j,xor(a, b) );
             }
         }
-        return this._m;
+        console.log(m.toHex());
     }
     subBytes(){
         var m = this._m;
-
-        // for(var i=0; i<m.length; i++){
-        //     this._m[i] = SBOX[m[i]];
-        // }
         for(var i=0; i<m.rows; i++){
             for(var j=0; j<m.cols; j++){
                 var index = m.getElement(i,j);
                 m.setElement(i,j, SBOX[index]);
             }
         }
-        console.log(this._m);
+        console.log(m.toHex());
     }
     shiftRows(){
         var m = this._m;
-
-        // for(var i=4,j=1; i<m.length; i+=4){
-        //     var tmp = m.splice(i,j);
-        //     m.splice((i+4)-tmp.length,0,...tmp);
-        //     j++;
-        // }
         for(var i=1; i<M.rows; i++){
             m.shiftRow(i,i);
         }
-        // console.log(m);
-        console.log(this._m);
+        console.log(m.toHex());
 
     }
     mixColumns(){
-        MIXCOLUM_MATRIX.multiply(this._m, function(i,j){
-            var xorResult = xorOperation(addZeros(i.toString(2)),addZeros(j.toString(2)));
-             return parseInt(xorResult, 2);
+        this._m = MIXCOLUM_MATRIX.multiply(this._m, function(a,b,previusResult){
+            var a = a.toByte();
+            var b = b.toByte();
+            if (a.charNumber('1')<b.charNumber('1'));{ // a * b => b ha de tener menos unos
+                var tmp = b;
+                b=a;
+                a=tmp;
+            }
+            var shiftsResult = [];
+            var shiftIndices = b.split('').reverse().join('').charIndices('1');
+
+            shiftsResult.push(a);
+            for(var shifts=1; shifts<8; shifts++){
+                a = a.rijndaelShift();
+                shiftsResult.push(a)
+            }
+
+            for(var l=0; l<shiftIndices.length; l++){
+                previusResult = xor(shiftsResult[ shiftIndices[l]], previusResult)
+            }
+            return previusResult;
         });
+        console.log(this._m.toHex());
     }
 }
-var a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-var b = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-var r = new Rijndael(a,b);
-// var z = xorOperation(addZeros((4).toString(2)),addZeros((16).toString(2)));
-// console.log(xorOperation(z,addZeros((36).toString(2 ) )) )
+Array.prototype.hexToDecimal = function(){
+    var res = []
+    for(var i=0; i<this.length; i++){
+        res.push(parseInt(this[i],16));
+    }
+    return res;
+}
+// var a = ['32','88','31','e0',
+//         '43','5a','31','37',
+//         'f6','30','98','07',
+//         'a8','8d','a2','34'];
+// var b = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+// var r = new Rijndael(a.hexToDecimal(),b.hexToDecimal());
+// r.addRoundKey();
+// r.subBytes();
+// r.shiftRows();
+// r.mixColumns();
+// r.generateKey();
+// r.addRoundKey();
+// r.subBytes();
+// r.shiftRows();
+// r.mixColumns();
+// r.generateKey();
+// r.addRoundKey();

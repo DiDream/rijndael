@@ -28,7 +28,8 @@ header.mean {
     margin-bottom: 0px;
     float: left;
     font-size: 18px;
-    box-sizing: border-box; }
+    box-sizing: border-box;
+    text-align: center; }
 
 #inputs-message {
   width: 125px;
