@@ -22,16 +22,38 @@ function setMatrixElements(matrix, values){
 
     })
 }
+
+//MODIFACION PRACTICA-------
+var input1 = ['32','88','31','e0',
+        '43','5a','31','37',
+        'f6','30','98','07',
+        'a8','8d','a2','34'];
+var output = ['39','02','dc','19',
+        '25','dc','11','6a',
+        '84','09','85','0b',
+        '1d','fb','97','32'];
+var key = ['2b','28','ab','09',
+        '7e','ae','f7','cf',
+        '15','d2','15','4f',
+        '16','a6','88','3c'];
+
+    // ACTIVAR
+// setInputValues(input1,key);
+// setInputValues(output,input1);
+//-------------------
+
+
 $('#inputs-form').on('submit',function(e){
     e.preventDefault();
     var message = InputValues($('#inputs-message input'));
     var key = InputValues($('#inputs-key input'));
     // var rijndael = new Rijndael(message, key);
-    // var message = ['32','88','31','e0',
-    //         '43','5a','31','37',
+    // var message = ['39','02','dc','19',
+    //         '25','dc','11','6a',
     //         'f6','30','98','07',
     //         'a8','8d','a2','34'];
     // var key = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+
     var rijndael = new Rijndael(message,key);
 
 
@@ -59,12 +81,12 @@ $('#inputs-form').on('submit',function(e){
 
 });
 
-function RandomValues(){
-    var values = Random();
+function setInputValues(m,k){
+    var values = m || Random();
     for(var i=0; i<values.length; i++){
         $(`#m-${i}`).val(values[i]);
     }
-    values = Random();
+    values = k || Random();
     for(var i=0; i<values.length; i++){
         $(`#k-${i}`).val(values[i]);
     }
