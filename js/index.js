@@ -1,7 +1,6 @@
 'use strict'
 var ROUNDS = 10;
 var rijndaelResults = $('#rijndael-results');
-var message = [];
 (function(){
     rijndaelResults.append(Input());
     for(var i=1; i<=ROUNDS; i++){
@@ -19,22 +18,44 @@ function InputValues(inputs){
 function setMatrixElements(matrix, values){
     var i=0;
     matrix.find('.matrix-element').each(function(){
-        $(this).text(values[i++].toString(16).toUpperCase());
+        $(this).text(values[i++]);
 
     })
 }
 $('#inputs-form').on('submit',function(e){
     e.preventDefault();
-    message = InputValues($('#inputs-message input'));
+    var message = InputValues($('#inputs-message input'));
     var key = InputValues($('#inputs-key input'));
-    var rijndael = new Rijndael(message, key);
+    // var rijndael = new Rijndael(message, key);
+    // var message = ['32','88','31','e0',
+    //         '43','5a','31','37',
+    //         'f6','30','98','07',
+    //         'a8','8d','a2','34'];
+    // var key = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+    var rijndael = new Rijndael(message,key);
 
 
     //Mostrar Valores de entrada
-    setMatrixElements($('#inputs .start-round'),message)
-    setMatrixElements($('#inputs .round-key'),key)
+    var input = rijndael.input;
+    setMatrixElements($('#inputs .start-round'),input.message)
+    setMatrixElements($('#inputs .round-key'),input.key)
 
     //rondas
+    var rounds = ROUNDS -1;
+    var log = rijndael.roundsLog;
+    for(var i=0;i<rounds;i++){
+        setMatrixElements($(`#round-${i+1} .start-round`),log[i].roundStart);
+        setMatrixElements($(`#round-${i+1} .sub-bytes`),log[i].afterSubBytes);
+        setMatrixElements($(`#round-${i+1} .shift-rows`),log[i].afterShiftRows);
+        setMatrixElements($(`#round-${i+1} .mix-colums`),log[i].afterMixColumns);
+        setMatrixElements($(`#round-${i+1} .round-key`),log[i].keyGenerated);
+    }
+    setMatrixElements($(`#round-${10} .start-round`),log[9].roundStart);
+    setMatrixElements($(`#round-${10} .sub-bytes`),log[9].afterSubBytes);
+    setMatrixElements($(`#round-${10} .shift-rows`),log[9].afterShiftRows);
+    setMatrixElements($(`#round-${10} .round-key`),log[9].keyGenerated);
+
+    setMatrixElements($(`#output`),rijndael.output);
 
 });
 

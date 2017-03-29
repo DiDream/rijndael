@@ -13,6 +13,7 @@ var RCON = new Matrix(4,10,
 
 var M = {rows: 4, cols: 4};
 var K = {rows: 4, cols: 4};
+var ROUNDS = 10;
 function xor(){
     var result = '00000000';
     for(var i=0; i<arguments.length; i++){
@@ -73,19 +74,19 @@ Matrix.prototype.setColum = function(j,col){
     }
 }
 Matrix.prototype.toHex = function(){
-    var res = [];
+    var res = new Array();
     for(var i=0; i<this.rows; i++){
         for(var j=0; j<this.cols; j++){
-            res.push(this.getElement(i,j).toString(16));
+            res.push(this.getElement(i,j).toString(16).toUpperCase());
         }
     }
     return res;
 }
 class Rijndael{
     constructor(m, k){
-        this.originalMessage = new Matrix(M.rows,M.cols,m);
+        this.message = new Matrix(M.rows,M.cols,m);
         this.key = new Matrix(K.rows,K.cols,k);
-        this.rounds = [];
+        this.roundsLog = [];
         this.roundKey = 0;
 
         //Inicializacion
@@ -94,6 +95,39 @@ class Rijndael{
 
         //algoritmo
 
+
+        var rondas = ROUNDS-1;
+
+        for(var i=0; i<rondas;i++){
+            console.log("RONDA:",i+1)
+            var log = new Object();
+            log.roundStart = this.addRoundKey();
+            log.afterSubBytes = this.subBytes();
+            log.afterShiftRows = this.shiftRows();
+            log.afterMixColumns = this.mixColumns();
+            log.keyGenerated = this.generateKey();
+            this.roundsLog.push(log);
+
+        }
+        console.log("RONDA: 10")
+        this.roundsLog.push({
+            roundStart: this.addRoundKey(),
+            afterSubBytes: this.subBytes(),
+            afterShiftRows: this.shiftRows(),
+            keyGenerated: this.generateKey()
+        });
+        console.log("INPUT")
+        this.addRoundKey();
+
+    }
+    get input(){
+        return {
+            message: this.message.toHex(),
+            key: this.key.toHex()
+        }
+    }
+    get output(){
+        return this._m.toHex();
     }
     generateKey(){
         var k = this._k;
@@ -126,6 +160,7 @@ class Rijndael{
             }
         }
         console.log(k.toHex());
+        return k.toHex();
 
     }
     addRoundKey(){
@@ -139,6 +174,7 @@ class Rijndael{
             }
         }
         console.log(m.toHex());
+        return m.toHex();
     }
     subBytes(){
         var m = this._m;
@@ -149,6 +185,7 @@ class Rijndael{
             }
         }
         console.log(m.toHex());
+        return m.toHex();
     }
     shiftRows(){
         var m = this._m;
@@ -156,9 +193,11 @@ class Rijndael{
             m.shiftRow(i,i);
         }
         console.log(m.toHex());
+        return m.toHex();
 
     }
     mixColumns(){
+        var m = this._m;
         this._m = MIXCOLUM_MATRIX.multiply(this._m, function(a,b,previusResult){
             var a = a.toByte();
             var b = b.toByte();
@@ -181,7 +220,9 @@ class Rijndael{
             }
             return previusResult;
         });
+
         console.log(this._m.toHex());
+        return this._m.toHex();
     }
 }
 Array.prototype.hexToDecimal = function(){

@@ -93,7 +93,6 @@ class Matrix {
                 matrixResult.setElement(i,j,result);
             }
         }
-        console.log(matrixResult);
         return matrixResult;
 
     }
