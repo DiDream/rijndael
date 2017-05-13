@@ -7,6 +7,16 @@ header.mean {
     display: inline-block;
     margin-left: 20px; }
 
+.controls {
+  text-align: center;
+  padding: 10px 0px; }
+  .controls .btn {
+    padding: 5px 10px;
+    border: 0px;
+    background-color: teal;
+    border-radius: 5px;
+    color: #fff; }
+
 #inputs-form {
   display: flex;
   align-items: center;
